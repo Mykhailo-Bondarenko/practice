@@ -20,30 +20,26 @@ Function.prototype.myCall = function (context, ...args) {
   delete context[index];
   return result;
 };
-
 //* task 2
 // Написать свою реализацию функций для работы с массивами, которые являются аналогами следующих функций: map, filter, reduce, find, forEach. Без использования стандартных функций.
+
 Array.prototype.myMap = function (callback, thisArg) {
   thisArg = thisArg || this;
-  let array = Object(this);
   const result = [];
-  let index = 0;
-  while (index < array.length) {
-    if (index in array) {
-      result[index] = callback.call(thisArg, this[index], index, array);
+  for (let i = 0; i < this.length; i++) {
+    if (i in this) {
+      result[i] = callback.call(thisArg, this[i], i, this);
     }
-    index++;
   }
   return result;
 };
 
 Array.prototype.myFilter = function (callback, thisArg) {
   thisArg = thisArg || this;
-  const array = Object(this);
   const result = [];
-  for (let i = 0; i < array.length; i++) {
-    if (i in array) {
-      if (callback.call(thisArg, this[i], i, array)) {
+  for (let i = 0; i < this.length; i++) {
+    if (i in this) {
+      if (callback.call(thisArg, this[i], i, this)) {
         result.push(this[i]);
       }
     }
@@ -54,19 +50,18 @@ Array.prototype.myFilter = function (callback, thisArg) {
 Array.prototype.myReduce = function (callback, initialValue) {
   let result;
   let index = 0;
-  let array = Object(this);
   if (arguments.length >= 2) {
     result = initialValue;
   } else {
-    if (array.length === 0) {
+    if (this.length === 0) {
       throw new Error('Reduce of empty array with no initial value.');
     }
-    result = array[index];
+    result = this[index];
     index++;
   }
-  for (; index < array.length; index++) {
-    if (index in array) {
-      result = callback(result, this[index], index, array);
+  for (; index < this.length; index++) {
+    if (index in this) {
+      result = callback(result, this[index], index, this);
     }
   }
   return result;
