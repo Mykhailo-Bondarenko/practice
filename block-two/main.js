@@ -73,22 +73,18 @@ Array.prototype.myReduce = function (callback, initialValue) {
 };
 
 Array.prototype.myFind = function (callback) {
-  let index = 0;
-  while (index < this.length) {
-    if (callback(this[index], index, this)) {
-      return this[index];
+  for (let i = 0; i < this.length; i++) {
+    if (callback(this[i], i, this)) {
+      return this[i];
     }
-    index++;
   }
   return undefined;
 };
 
 Array.prototype.myForEach = function (callback) {
-  let index = 0;
-  while (index < this.length) {
-    if (index in this) {
-      callback(this[index], index, this);
+  for (let i = 0; i < this.length; i++) {
+    if (i in this) {
+      callback(this[i], i, this);
     }
-    index++;
   }
 };
