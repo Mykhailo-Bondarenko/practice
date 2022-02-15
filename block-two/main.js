@@ -4,58 +4,52 @@
 Function.prototype.myBind = function (context, ...rest) {
   let value = this;
   return function (...args) {
-    let index = Date.now();
+    let index = Symbol();
     context[index] = value;
     const result = context[index](...rest, ...args);
     delete context[index];
     return result;
   };
-}
+};
 
 Function.prototype.myCall = function (context, ...args) {
   let value = this;
-  const index = Date.now();
+  const index = Symbol();
   context[index] = value;
   const result = context[index](...args);
   delete context[index];
   return result;
-}
+};
 
 //* task 2
 // Написать свою реализацию функций для работы с массивами, которые являются аналогами следующих функций: map, filter, reduce, find, forEach. Без использования стандартных функций.
 Array.prototype.myMap = function (callback, thisArg) {
-  let value = this;
-  if (arguments.length > 1) {
-    value = thisArg;
-  }
+  thisArg = thisArg || this;
   let array = Object(this);
   const result = [];
   let index = 0;
   while (index < array.length) {
     if (index in array) {
-      result[index] = callback.call(value, this[index], index, array);
+      result[index] = callback.call(thisArg, this[index], index, array);
     }
     index++;
   }
   return result;
-}
+};
 
 Array.prototype.myFilter = function (callback, thisArg) {
-  const value = this;
-  if (arguments.length > 1) {
-    value = thisArg;
-  }
+  thisArg = thisArg || this;
   const array = Object(this);
   const result = [];
   for (let i = 0; i < array.length; i++) {
     if (i in array) {
-      if (callback.call(value, this[i], i, array)) {
+      if (callback.call(thisArg, this[i], i, array)) {
         result.push(this[i]);
       }
     }
   }
   return result;
-}
+};
 
 Array.prototype.myReduce = function (callback, initialValue) {
   let result;
@@ -76,35 +70,25 @@ Array.prototype.myReduce = function (callback, initialValue) {
     }
   }
   return result;
-}
+};
 
-Array.prototype.myFind = function (callback, thisArg) {
-  let value = this;
-  if (arguments.length > 1) {
-    value = thisArg;
-  }
-  let array = Object(this);
+Array.prototype.myFind = function (callback) {
   let index = 0;
-  while (index < array.length) {
-    if (callback.call(value, this[index], index, array)) {
+  while (index < this.length) {
+    if (callback(this[index], index, this)) {
       return this[index];
     }
     index++;
   }
   return undefined;
-}
+};
 
-Array.prototype.myForEach = function (callback, thisArg) {
-  let value = this;
-  if (arguments.length > 1) {
-    value = thisArg;
-  }
-  let array = Object(this);
+Array.prototype.myForEach = function (callback) {
   let index = 0;
-  while (index < array.length) {
-    if (index in array) {
-      callback.call(value, this[index], index, array);
+  while (index < this.length) {
+    if (index in this) {
+      callback(this[index], index, this);
     }
     index++;
   }
-}
+};
