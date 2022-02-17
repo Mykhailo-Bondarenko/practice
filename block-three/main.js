@@ -136,35 +136,41 @@ class BinaryTree {
 }
 
 //* Написать сортировку двумя различными методами (Можно выбрать любые методы сортировки, самые простые: пузырьковая, выбором)
-function selectiveSort(array) {
-  if (array.length < 2) {
-    return array;
+Array.prototype.selectiveSort = function (callback) {
+  if (this.length < 2) {
+    return this;
   }
-  for (let i = 0; i < array.length; i++) {
+  if (typeof callback !== 'function') {
+    callback = (itemOne, itemTwo) => itemOne > itemTwo;
+  }
+  for (let i = 0; i < this.length; i++) {
     let lesserNumber = i;
-    for (let j = i; j < array.length; j++) {
-      if (array[lesserNumber] > array[j]) {
+    for (let j = i; j < this.length; j++) {
+      if (callback(this[lesserNumber], this[j])) {
         lesserNumber = j;
       }
     }
     if (lesserNumber !== i) {
-      [array[lesserNumber], array[i]] = [array[i], array[lesserNumber]];
+      [this[lesserNumber], this[i]] = [this[i], this[lesserNumber]];
     }
   }
-  return array;
-}
+  return this;
+};
 
-function boobleSort(array) {
-  if (array.length < 2) {
-    return array;
+Array.prototype.boobleSort = function (callback) {
+  if (this.length < 2) {
+    return this;
   }
-  const length = array.length - 1;
+  if (typeof callback !== 'function') {
+    callback = (itemOne, itemTwo) => itemOne > itemTwo;
+  }
+  const length = this.length - 1;
   for (let i = 0; i < length; i++) {
     for (let j = 0; j < length - i; j++) {
-      if (array[j + 1] < array[j]) {
-        [array[j + 1], array[j]] = [array[j], array[j + 1]];
+      if (callback(this[j], this[j + 1])) {
+        [this[j + 1], this[j]] = [this[j], this[j + 1]];
       }
     }
   }
-  return array;
-}
+  return this;
+};
