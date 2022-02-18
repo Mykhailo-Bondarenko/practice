@@ -1,8 +1,9 @@
 "use strict";
 //* Написать свою реализацию бинарного дерева поиска. (Возможности структуры данных должны быть: Добавить новый элемент, удалить элемент, найти элемент по его значению)
 class BinaryTree {
+
   constructor(data) {
-    this.data = data;
+    this.data = data ?? null;
     this.left = null;
     this.right = null;
   }
