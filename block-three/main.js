@@ -1,137 +1,67 @@
 "use strict";
 //* Написать свою реализацию бинарного дерева поиска. (Возможности структуры данных должны быть: Добавить новый элемент, удалить элемент, найти элемент по его значению)
 class BinaryTree {
-  constructor() {
-    this.root = null;
+  constructor(data) {
+    this.data = data;
+    this.left = null;
+    this.right = null;
   }
 
-  add(value) {
-    const node = {
-      value,
-      left: null,
-      right: null,
+  add(data) {
+    if (data < this.data && this.left) {
+      this.left.add(data);
+    } else if (data < this.data) {
+      this.left = new BinaryTree(data);
     }
-
-    if (!this.root) {
-      this.root = node;
-      return;
-    }
-
-    let current = this.root;
-
-    while (current) {
-      if (node.value < current.value) {
-        if (!current.left) {
-          current.left = node;
-          return;
-        }
-        current = current.left;
-      } else {
-        if (!current.right) {
-          current.right = node;
-          return;
-        }
-        current = current.right;
-      }
+    if (data > this.data && this.right) {
+      this.right.add(data);
+    } else if (data > this.data) {
+      this.right = new BinaryTree(data);
     }
   }
 
-  find(value) {
-    function callback(current) {
-      if (!current) {
-        return null;
-      }
-      if (current.value === value) {
-        return current.value;
-      }
-      if (current.value > value) {
-        return callback(current.left);
-      }
-      return callback(current.right);
+  find(data) {
+    if (this.data === data) {
+      return this;
     }
-    return callback(this.root);
+    if (data < this.data && this.left) {
+      return this.left.find(data);
+    }
+    if (data > this.data && this.right) {
+      return this.right.find(data);
+    }
+    return null;
   }
 
-  delete(value) {
-    function findPrevios(current, previos) {
-      if (!current) {
-        return null;
-      }
-      if (current.value === value) {
-        return { current, previos };
-      }
-      if (current.value > value) {
-        return findPrevios(current.left, current);
-      }
-      return findPrevios(current.right, current);
+  remove(data) {
+    if (data < this.data) {
+      this.left = this.left.remove(data);
+      return this;
     }
+    if (data > this.data) {
+      this.right = this.right.remove(data);
+      return this;
+    }
+    if (!this.left && !this.right) {
+      return null;
+    }
+    if (!this.left) {
+      return this.right;
+    }
+    if (!this.right) {
+      return this.left;
+    }
+    let result = this.right.min();
+    this.data = result.data;
+    this.right = this.right.remove(result.data);
+    return this;
+  }
 
-    function deleteEmptyElement(current, previos) {
-      if (!previos) {
-        this.root = null;
-      }
-      if (previos.left === current) {
-        previos.left = null;
-      }
-      previos.right = null;
+  min() {
+    if (!this.left) {
+      return this;
     }
-
-    function deleteOneElement(current, previos) {
-      let result = null;
-      if (current.left) {
-        result = current.left;
-      }
-      if (current.right) {
-        result = current.left;
-      }
-      if (!previos) {
-        this.root = result;
-      }
-      if (previos.left === current) {
-        previos.left = result;
-      }
-      previos.right = result;
-    }
-
-    function deleteTwoElement(current, previos) {
-      let previosResult = current;
-      let result = current.left;
-      if (result.right) {
-        previosResult = result;
-        result = result.right;
-      }
-      deleteOneElement(result, previosResult);
-      let left = current.left;
-      let right = current.right;
-      if (!previos) {
-        result.left = left;
-        result.right = right;
-        this.root = result;
-      } else {
-        if (previos.left === current) {
-          result.left = left;
-          result.right = right;
-          previos.left = result;
-        } else {
-          result.left = left;
-          result.right = right;
-          previos.right = result;
-        }
-      }
-    }
-
-    let result = findPrevios(this.root, null);
-    let current = result.current;
-    let previos = result.previos;
-
-    if (!current.left && !current.right) {
-      deleteEmptyElement(current, previos);
-    }
-    if ((!current.left && current.right)
-      || (current.left && !current.right)) {
-      deleteOneElement(current, previos);
-    }
-    deleteTwoElement(current, previos);
+    return this.min(this.left);
   }
 }
 
