@@ -9,6 +9,9 @@ class BinaryTree {
   }
 
   add(data) {
+    if (!this.data) {
+      this.data = data;
+    }
     if (data < this.data && this.left) {
       this.left.add(data);
     } else if (data < this.data) {
